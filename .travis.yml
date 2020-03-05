@@ -1,0 +1,16 @@
+language: bash
+dist: bionic
+services: 
+  - docker
+branches:
+  only:
+  - master
+env:
+  global:
+  - DOCKER_USERNAME=yousiki
+  - DOCKER_IMAGE=texlive-full
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin        
+  - export IMAGE_NAME=$DOCKER_USERNAME/$DOCKER_IMAGE:latest
+  - docker build -t $IMAGE_NAME .
+  - travis_wait 30 docker push $IMAGE_NAME
